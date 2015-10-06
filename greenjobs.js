@@ -4,12 +4,32 @@
 var testdata = greenjobs.slice(0,4);
 //console.log(testdata);
 
+/**
+ * Returns true if the passed record has an Industry field.
+ * @param record The record.
+ * @returns {boolean} True if Industry field is present.
+ */
+function hasIndustry(record) {
+  return record.hasOwnProperty("Industry");
+}
+
+function emptyIndustry(record) {
+  return record.Industry.length === 0;
+}
+
 // listIndustries(data). Returns a list of strings indicating all the industries providing green jobs (no duplicates).
 function listIndustries(data) {
+  if (!_.every(data, hasIndustry)) {
+    throw new Error("No Industry field.");
+  }
+  if (_.some(data, emptyIndustry)) {
+    throw new Error("Empty Industry field.");
+  }
+
   return _.unique(_.pluck(data, "Industry"));
 }
 
-//console.log(listIndustries(greenjobs));
+console.log(listIndustries(testdata));
 
 // countyGreenJobs(data).  Returns an object where the keys are County names and the values are the number of Green Jobs listed in that County.
 // 1. Group by county.
@@ -57,5 +77,5 @@ function maxIndustryJobs(data) {
   return _.max(industryJobs(data), function (record) {return record.jobs;});
 }
 
-console.log(maxIndustryJobs(greenjobs));
+//console.log(maxIndustryJobs(greenjobs));
 
